@@ -9,8 +9,8 @@ const SignInPage = () => {
     password: ''
   });
 
-  const validUsername = import.meta.env.VITE_ADMIN_USERNAME ;
-  const validPassword = import.meta.env.VITE_ADMIN_PASSWORD ;
+  const validUsername = import.meta.env.VITE_ADMIN_USERNAME.split(",");
+  const validPassword = import.meta.env.VITE_ADMIN_PASSWORD.split(",");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,10 +20,10 @@ const SignInPage = () => {
       return;
     }
 
-    if (formData.username !== validUsername || formData.password !== validPassword) {
-      toast.error('Invalid username or password');
+    if (!validUsername.includes(formData.username) || !validPassword.includes(formData.password)) {
+      toast.error("Invalid username or password");
       return;
-    }
+  }
 
     toast.success('Login successful! Redirecting...');
     setTimeout(() => {
