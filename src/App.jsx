@@ -1,12 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import SignInPage from './Signin';
-
-
-import RegistrationsList from './Dashboard';
-import RegistrationForm from './Pages/Register';
+import SignInPage from './Pages/Signin';
+import RegistrationsList from './Pages/Dashboard';
 import TEDxRegistration from './Pages/Register';
+import NotFound from './Pages/NotFound';
 
 const App = () => {
   return (
@@ -36,8 +34,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<TEDxRegistration />} />
         <Route path="/admin/signin" element={<SignInPage />} />
-        <Route path="/dashboard" element={<RegistrationsList/>} /> 
-        <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/admin/dashboard" element={<RegistrationsList/>} /> 
+        <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

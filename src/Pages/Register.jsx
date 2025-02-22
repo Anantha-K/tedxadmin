@@ -1,39 +1,116 @@
-import React, { useState, useEffect } from 'react';
-import './reg.css';
+import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import  "../Styles/reg.css";
+
+const STORAGE_KEY = "tedx_registration";
+const PAYMENT_TIMEOUT = 600;
+const MAX_REGISTRATIONS = 40;
+const API_BASE_URL =  import.meta.env.VITE_API_BASE_URL;
+
 const tshirtSizes = [
-  { size: 'XS', measurements: '34-36' },
-  { size: 'S', measurements: '36-38' },
-  { size: 'M', measurements: '38-40' },
-  { size: 'L', measurements: '40-42' },
-  { size: 'XL', measurements: '42-44' },
-  { size: 'XXL', measurements: '44-46' }
+  { size: "XS", measurements: "34-36" },
+  { size: "S", measurements: "36-38" },
+  { size: "M", measurements: "38-40" },
+  { size: "L", measurements: "40-42" },
+  { size: "XL", measurements: "42-44" },
+  { size: "XXL", measurements: "44-46" },
 ];
 
 const TEDxRegistration = () => {
   const [step, setStep] = useState(1);
-  const [timeLeft, setTimeLeft] = useState(600); 
+  const [timeLeft, setTimeLeft] = useState(PAYMENT_TIMEOUT);
+  const [isLoading, setIsLoading] = useState(true);
+  const [registrationsFull, setRegistrationsFull] = useState(false);
+  const [remainingSlots, setRemainingSlots] = useState(MAX_REGISTRATIONS);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    gender: '',
-    isFisatian: '',
-    role: '',
-    branch: '',
-    semester: '',
-    tshirtSize: '',
-    paymentScreenshot: null
+    name: "",
+    email: "",
+    phone: "",
+    gender: "",
+    isFisatian: "",
+    role: "",
+    branch: "",
+    semester: "",
+    tshirtSize: "",
+    paymentScreenshot: null,
+    registrationTime: null,
   });
 
-  useEffect(() => {
-    if (step === 2 && timeLeft > 0) {
-      const timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
+  const checkRegistrationAvailability = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/registration-count`);
+      if (!response.ok) throw new Error("Failed to fetch registration count");
 
-      return () => clearInterval(timer);
+      const data = await response.json();
+      setRegistrationsFull(!data.available);
+      setRemainingSlots(data.remaining);
+      return data.available;
+    } catch (error) {
+      console.error("Error checking registration availability:", error);
+      toast.error("Unable to verify registration availability");
+      return false;
     }
+  };
+
+  useEffect(() => {
+    const initializeRegistration = async () => {
+      setIsLoading(true);
+      await checkRegistrationAvailability();
+
+      const savedData = localStorage.getItem(STORAGE_KEY);
+      if (savedData) {
+        const parsedData = JSON.parse(savedData);
+
+        if (parsedData.registrationTime) {
+          const now = Date.now();
+          const timeElapsed = Math.floor(
+            (now - parsedData.registrationTime) / 1000
+          );
+          const remainingTime = PAYMENT_TIMEOUT - timeElapsed;
+
+          if (remainingTime > 0 && !parsedData.paymentScreenshot) {
+            setFormData(parsedData);
+            setTimeLeft(remainingTime);
+            setStep(2);
+          } else if (remainingTime <= 0 && !parsedData.paymentScreenshot) {
+            localStorage.removeItem(STORAGE_KEY);
+            toast.error(
+              "Your registration session has expired. Please start again."
+            );
+          }
+        }
+      }
+      setIsLoading(false);
+    };
+
+    initializeRegistration();
+  }, []);
+
+  useEffect(() => {
+    let timer;
+    if (step === 2 && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          const newTime = prev - 1;
+          if (newTime <= 0) {
+            clearInterval(timer);
+            localStorage.removeItem(STORAGE_KEY);
+            setStep(1);
+            toast.error("Payment time expired. Please register again.");
+            return 0;
+          }
+          return newTime;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
   }, [step, timeLeft]);
+
+  useEffect(() => {
+    if (formData.registrationTime) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+  }, [formData]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -45,32 +122,154 @@ const TEDxRegistration = () => {
   };
 
   const handleFileUpload = (e) => {
-    setFormData((prev) => ({ ...prev, paymentScreenshot: e.target.files[0] }));
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size should be less than 5MB");
+        return;
+      }
+      setFormData((prev) => ({ ...prev, paymentScreenshot: file }));
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (step === 1) {
-      setStep(2);
+      setIsLoading(true);
+      const isAvailable = await checkRegistrationAvailability();
+
+      if (!isAvailable) {
+        toast.error("Sorry, registrations are now full");
+        setRegistrationsFull(true);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            gender: formData.gender,
+            isFisatian: formData.isFisatian,
+            branch: formData.isFisatian === "yes" ? formData.branch : undefined,
+            semester:
+              formData.isFisatian === "yes" ? formData.semester : undefined,
+            role: formData.isFisatian === "no" ? formData.role : undefined,
+            tshirtSize: formData.tshirtSize,
+          }),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Registration failed");
+        }
+
+        const newFormData = {
+          ...formData,
+          registrationTime: Date.now(),
+        };
+        setFormData(newFormData);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(newFormData));
+        setStep(2);
+        toast.success("Registration successful! Please complete the payment.");
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     } else {
-      console.log('Form submitted:', formData);
+      setIsLoading(true);
+      const isAvailable = await checkRegistrationAvailability();
+
+      if (!isAvailable) {
+        toast.error("Sorry, registrations are now full");
+        setRegistrationsFull(true);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const formDataObj = new FormData();
+        formDataObj.append("email", formData.email);
+        formDataObj.append("payment", formData.paymentScreenshot);
+
+        const response = await fetch(`${API_BASE_URL}/submit-payment`, {
+          method: "POST",
+          body: formDataObj,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Payment submission failed");
+        }
+
+        toast.success("Payment submitted successfully!");
+        localStorage.removeItem(STORAGE_KEY);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          gender: "",
+          isFisatian: "",
+          role: "",
+          branch: "",
+          semester: "",
+          tshirtSize: "",
+          paymentScreenshot: null,
+          registrationTime: null,
+        });
+        setStep(1);
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
+
+  if (isLoading) {
+    return (
+      <div className="registration-container">
+        <div className="loading">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="registration-container">
       <div className="header">
-        <img src="logo-white.png" alt="TEDx Logo" className="logo" />
-        <div className="subtitle">Register Now</div>
+        <img src="/logo-white.png" alt="TEDx Logo" className="logo" />
+        {registrationsFull ? (
+          <div className="subtitle">Registrations Full</div>
+        ) : (
+          <div className="subtitle">Register Now</div>
+        )}
+        {!registrationsFull && (
+          <div className="slots-remaining">
+            Remaining slots: {remainingSlots}
+          </div>
+        )}
       </div>
 
-      {step === 1 ? (
+      {registrationsFull ? (
+        <div className="registration-closed">
+          <h2>Registration Closed</h2>
+          <p>Sorry, all available slots have been filled.</p>
+        </div>
+      ) : step === 1 ? (
         <form onSubmit={handleSubmit} className="registration-form">
           <div className="section-title">Personal Information</div>
           <div className="form-grid">
@@ -139,7 +338,7 @@ const TEDxRegistration = () => {
               </select>
             </div>
 
-            {formData.isFisatian === 'no' && (
+            {formData.isFisatian === "no" && (
               <div className="form-group">
                 <label htmlFor="role">Role/Profession</label>
                 <input
@@ -154,11 +353,12 @@ const TEDxRegistration = () => {
             )}
           </div>
 
-          {formData.isFisatian === 'yes' && (
+          {formData.isFisatian === "yes" && (
             <div className="academic-section">
               <div className="section-title">Academic Information</div>
               <div className="notice-box">
-                <strong>Note:</strong> Please bring your FISAT ID card on the event day for verification.
+                <strong>Note:</strong> Please bring your FISAT ID card on the
+                event day for verification.
               </div>
               <div className="form-grid">
                 <div className="form-group">
@@ -204,7 +404,9 @@ const TEDxRegistration = () => {
             {tshirtSizes.map(({ size, measurements }) => (
               <div
                 key={size}
-                className={`tshirt-option ${formData.tshirtSize === size ? 'selected' : ''}`}
+                className={`tshirt-option ${
+                  formData.tshirtSize === size ? "selected" : ""
+                }`}
                 onClick={() => handleTshirtSelect(size)}
               >
                 <div className="size-details">
@@ -212,19 +414,27 @@ const TEDxRegistration = () => {
                   <span className="measurements">{measurements}</span>
                 </div>
                 <div className="radio-circle">
-                  {formData.tshirtSize === size && <div className="radio-dot" />}
+                  {formData.tshirtSize === size && (
+                    <div className="radio-dot" />
+                  )}
                 </div>
               </div>
             ))}
           </div>
 
-          <button type="submit" className="submit-button">
-            Register
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={isLoading || !formData.tshirtSize}
+          >
+            {isLoading ? "Processing..." : "Register"}
           </button>
         </form>
       ) : (
         <div className="payment-section">
-          <div className="countdown">Time remaining: {formatTime(timeLeft)}</div>
+          <div className="countdown">
+            Time remaining: {formatTime(timeLeft)}
+          </div>
           <div className="payment-instructions">
             <h2>Payment Instructions</h2>
             <ol>
@@ -232,7 +442,11 @@ const TEDxRegistration = () => {
               <li>Take a screenshot of your payment confirmation</li>
               <li>Upload the screenshot below</li>
             </ol>
-            <div className="price">Early Bird: ₹699</div>
+            {formData.isFisatian === "yes" ? (
+              <div className="price">Total Payable: ₹499</div>
+            ) : (
+              <div className="price">Total Payable: ₹699</div>
+            )}
           </div>
 
           <div className="qr-code">
@@ -249,11 +463,25 @@ const TEDxRegistration = () => {
                 required
                 onChange={handleFileUpload}
               />
+              <div className="file-requirements">Maximum file size: 5MB</div>
             </div>
-            <button type="submit" className="submit-button">
-              Submit Payment
+
+            <button
+              type="submit"
+              className="submit-button"
+              disabled={isLoading || !formData.paymentScreenshot}
+            >
+              {isLoading ? "Processing..." : "Submit Payment"}
             </button>
           </form>
+
+          <div className="payment-note">
+            <p>
+              Note: Your registration will not be confirmed until payment is
+              verified. The payment screenshot helps us track and verify your
+              payment.
+            </p>
+          </div>
         </div>
       )}
     </div>

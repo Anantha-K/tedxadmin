@@ -1,0 +1,177 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #000;
+  color: white;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+.fisatian {
+  background: rgba(40, 167, 69, 0.2); 
+  color: #155724;
+  border: 2px solid #28a745;
+  border-radius: 12px;
+  padding: 5px 10px;
+  display: flex;
+  justify-content: center;
+}
+
+
+.headerr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.headerr .icon {
+  width: 32px;
+  height: 32px;
+  color: #e60000;
+}
+
+.headerr h1 {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.registrations {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card {
+  background-color: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+  width: 50vw;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.info h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.info p {
+  margin: 5px 0;
+  color: #b3b3b3;
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  gap: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease-in-out;
+}
+
+.btn-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.view {
+  background-color: #333;
+  color: white;
+}
+
+.view:hover {
+  background-color: #444;
+}
+
+.send {
+  background-color: #e60000;
+  color: white;
+}
+
+.send:hover {
+  background-color: #cc0000;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.loading-icon {
+  width: 48px;
+  height: 48px;
+  color: #e60000;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  text-align: center;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  float: right;
+}
+
+.modal-img {
+  max-width: 100%;
+  border-radius: 5px;
+}

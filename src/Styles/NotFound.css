@@ -1,0 +1,30 @@
+.not-found-container {
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+  }
+  
+  .not-found-container h1 {
+    font-size: 5rem;
+    font-weight: bold;
+  }
+  
+  .not-found-container p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .home-button {
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .home-button:hover {
+    background: #e60000;
+  }
+  
