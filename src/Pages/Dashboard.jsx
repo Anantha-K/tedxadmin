@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Users, Mail, Eye, X, Loader2 , MailIcon, Phone} from 'lucide-react';
+import { Users, Mail, Eye, X, Loader2 , MailIcon, Phone, Shirt} from 'lucide-react';
 import '../Styles/dashboard.css';
 import toast from 'react-hot-toast';
 
@@ -98,19 +98,18 @@ const RegistrationsList = () => {
                 {registration.personalInfo.isFisatian && <p className="fisatian">Fisatian</p>}
                 <p><MailIcon/>{registration.personalInfo.email}</p>
                 <p><Phone/>{registration.personalInfo.phone}</p>
+                <div style={{display:"flex",justifyContent:"start",gap:"10px",alignItems:"center"}}>
+                <Shirt/>
+                <h3>{registration.personalInfo.tshirtSize}</h3>
+                </div>
               </div>
               
               <div className="actions">
                 <button onClick={() => handleOpenModal(registration.paymentInfo.screenshotUrl)} className="btn view">
                   <Eye className="btn-icon" /> View Payment
                 </button>
-                {registration.mailSent? <button disabled onClick={() => sendMail(
-                  registration.personalInfo.email,
-                  registration.personalInfo.name,
-                  registration._id,
-                  registration.personalInfo.isFisatian
-                )} className="btn send">
-                  <Mail className="btn-icon" /> Send Mail
+                {registration.personalInfo.mailSent? <button disabled={true} className="btn send">
+                  <Mail className="btn-icon" /> Mail Sent already
                 </button>: 
                 <button onClick={() => sendMail(
                   registration.personalInfo.email,

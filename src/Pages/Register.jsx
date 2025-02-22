@@ -135,6 +135,7 @@ const TEDxRegistration = () => {
   };
 
   const handleSubmit = async (e) => {
+    alert(formData.tshirtSize)
     e.preventDefault();
 
     if (step === 1) {
@@ -442,6 +443,7 @@ const TEDxRegistration = () => {
             <h2>Payment Instructions</h2>
             <ol>
               <li>Scan the QR code below using any UPI payment app</li>
+              <li>UPI ID: <span class="upi-id">www.nizamudheen-1@okaxis</span></li>
               <li>Take a screenshot of your payment confirmation</li>
               <li>Upload the screenshot below</li>
             </ol>
@@ -453,7 +455,7 @@ const TEDxRegistration = () => {
           </div>
 
           <div className="qr-code">
-            <img src="qr.jpeg" alt="Payment QR Code" />
+            <img src="/qr.jpeg" alt="Payment QR Code" />
           </div>
 
           <form onSubmit={handleSubmit} className="payment-form">
