@@ -30,7 +30,7 @@ const SignInPage = () => {
     localStorage.setItem('authToken', token);
     
     toast.success('Login successful! Redirecting...');
-    setTimeout(() => navigate('/dashboard'), 1500);
+    setTimeout(() => navigate('/admin/dashboard'), 1500);
   };
 
   const handleChange = (e) => {

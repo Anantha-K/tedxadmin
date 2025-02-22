@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import  "../Styles/reg.css";
+import { Loader2 } from "lucide-react";
+
 
 const STORAGE_KEY = "tedx_registration";
 const PAYMENT_TIMEOUT = 600;
@@ -242,8 +244,9 @@ const TEDxRegistration = () => {
 
   if (isLoading) {
     return (
-      <div className="registration-container">
-        <div className="loading">Loading...</div>
+      <div className="loading-container">
+        <Loader2 className="loading-icon" />
+        <h2>Loading...</h2>
       </div>
     );
   }
