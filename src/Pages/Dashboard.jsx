@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Mail, Eye, X, Loader2 , MailIcon, Phone} from 'lucide-react';
 import '../Styles/dashboard.css';
+import toast from 'react-hot-toast';
+
 
 const API_BASE_URL =  import.meta.env.VITE_API_BASE_URL;
 
@@ -43,10 +45,10 @@ const RegistrationsList = () => {
           isFisatian
         }),
       });
-      alert('Mail sent successfully!');
+      toast.success('Mail sent successfully!');
     } catch (error) {
       console.error('Error sending mail:', error);
-      alert('Failed to send mail');
+      toast.error('Failed to send mail');
     }
   };
 
@@ -102,7 +104,14 @@ const RegistrationsList = () => {
                 <button onClick={() => handleOpenModal(registration.paymentInfo.screenshotUrl)} className="btn view">
                   <Eye className="btn-icon" /> View Payment
                 </button>
-                
+                {registration.mailSent? <button disabled onClick={() => sendMail(
+                  registration.personalInfo.email,
+                  registration.personalInfo.name,
+                  registration._id,
+                  registration.personalInfo.isFisatian
+                )} className="btn send">
+                  <Mail className="btn-icon" /> Send Mail
+                </button>: 
                 <button onClick={() => sendMail(
                   registration.personalInfo.email,
                   registration.personalInfo.name,
@@ -110,7 +119,7 @@ const RegistrationsList = () => {
                   registration.personalInfo.isFisatian
                 )} className="btn send">
                   <Mail className="btn-icon" /> Send Mail
-                </button>
+                </button>}
               </div>
             </div>
           </div>
