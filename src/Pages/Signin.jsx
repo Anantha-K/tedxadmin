@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import '../Styles/SignInPage.css';
 
+
+const API_BASE_URL =  import.meta.env.VITE_API_BASE_URL;
+
 const SignInPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: '', password: '' });

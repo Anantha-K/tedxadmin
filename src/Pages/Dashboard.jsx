@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Users, Mail, Eye, X, Loader2 , MailIcon, Phone} from 'lucide-react';
 import '../Styles/dashboard.css';
 
+const API_BASE_URL =  import.meta.env.VITE_API_BASE_URL;
+
 const RegistrationsList = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,7 +19,7 @@ const RegistrationsList = () => {
 
   const fetchRegistrations = async () => {
     try {
-      const response = await fetch('https://registration-lhy3.onrender.com/registrations');
+      const response = await fetch(`${API_BASE_URL}/registrations`);
       const data = await response.json();
       setRegistrations(data);
       setLoading(false);
@@ -29,7 +31,7 @@ const RegistrationsList = () => {
 
   const sendMail = async (email, name, registrationId, isFisatian) => {
     try {
-      await fetch('https://registration-lhy3.onrender.com/sendmail', {
+      await fetch(`${API_BASE_URL}/sendmail`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
