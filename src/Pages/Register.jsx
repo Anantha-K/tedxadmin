@@ -242,14 +242,14 @@ const TEDxRegistration = () => {
       }
     } else {
       setIsLoading(true);
-      // const isAvailable = await checkRegistrationAvailability();
+      const isAvailable = await checkRegistrationAvailability();
 
-      // if (!isAvailable) {
-      //   toast.error("Sorry, registrations are now full");
-      //   setRegistrationsFull(true);
-      //   setIsLoading(false);
-      //   return;
-      // }
+      if (!isAvailable) {
+        toast.error("Sorry, registrations are now full");
+        setRegistrationsFull(true);
+        setIsLoading(false);
+        return;
+      }
 
       try {
         const formDataObj = new FormData();
