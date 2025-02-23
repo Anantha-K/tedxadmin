@@ -24,6 +24,10 @@ const TEDxRegistration = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [registrationsFull, setRegistrationsFull] = useState(false);
   const [remainingSlots, setRemainingSlots] = useState(MAX_REGISTRATIONS);
+  const [validationErrors, setValidationErrors] = useState({
+    phone: "",
+    email: ""
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -37,6 +41,30 @@ const TEDxRegistration = () => {
     paymentScreenshot: null,
     registrationTime: null,
   });
+
+
+  const validatePhone = (phone) => {
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phone) {
+      return "Phone number is required";
+    }
+    if (!phoneRegex.test(phone)) {
+      return "Please enter a valid 10-digit Indian phone number";
+    }
+    return "";
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) {
+      return "Email is required";
+    }
+    if (!emailRegex.test(email)) {
+      return "Please enter a valid email address";
+    }
+    return "";
+  };
+
 
   const checkRegistrationAvailability = async () => {
     try {
@@ -117,6 +145,17 @@ const TEDxRegistration = () => {
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
+    if (id === 'phone') {
+      setValidationErrors(prev => ({
+        ...prev,
+        phone: validatePhone(value)
+      }));
+    } else if (id === 'email') {
+      setValidationErrors(prev => ({
+        ...prev,
+        email: validateEmail(value)
+      }));
+    }
   };
 
   const handleTshirtSelect = (size) => {
@@ -136,6 +175,20 @@ const TEDxRegistration = () => {
 
   const handleSubmit = async (e) => {
     // alert(formData.tshirtSize)
+    const phoneError = validatePhone(formData.phone);
+    const emailError = validateEmail(formData.email);
+
+    setValidationErrors({
+      phone: phoneError,
+      email: emailError
+    });
+
+
+    if (phoneError || emailError) {
+      toast.error("Please fix the validation errors before submitting");
+      return;
+    }
+
     e.preventDefault();
 
     if (step === 1) {
@@ -259,7 +312,7 @@ const TEDxRegistration = () => {
         {registrationsFull ? (
           <div className="subtitle">Registrations Full</div>
         ) : (
-          <div className="subtitle">Register Now</div>
+          <div className="subtitle">First Phase Tickets Live Now</div>
         )}
         {!registrationsFull && (
           <div className="slots-remaining">
@@ -298,7 +351,11 @@ const TEDxRegistration = () => {
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleInputChange}
+                className={validationErrors.email ? "error" : ""}
               />
+              {validationErrors.email && (
+                <div className="error-message">{validationErrors.email}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -307,10 +364,14 @@ const TEDxRegistration = () => {
                 type="tel"
                 id="phone"
                 required
-                placeholder="Enter your phone number"
+                placeholder="Enter your 10-digit phone number"
                 value={formData.phone}
                 onChange={handleInputChange}
+                className={validationErrors.phone ? "error" : ""}
               />
+              {validationErrors.phone && (
+                <div className="error-message">{validationErrors.phone}</div>
+              )}
             </div>
 
             <div className="form-group">
@@ -448,9 +509,9 @@ const TEDxRegistration = () => {
               <li>Upload the screenshot below</li>
             </ol>
             {formData.isFisatian === "yes" ? (
-              <div className="price">Total Payable: ₹799</div>
+              <div className="price">₹799</div>
             ) : (
-              <div className="price">Total Payable: ₹899</div>
+              <div className="price">₹899</div>
             )}
           </div>
 

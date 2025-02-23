@@ -241,8 +241,9 @@
   }
   
   .price {
-    font-size: 1.6em;
+    font-size: 2em;
     color: #fff;
+    font-weight: bold;
     margin: 24px 0;
     padding: 16px;
     background: rgba(255, 43, 43, 0.1);
