@@ -135,7 +135,7 @@ const TEDxRegistration = () => {
   };
 
   const handleSubmit = async (e) => {
-    alert(formData.tshirtSize)
+    // alert(formData.tshirtSize)
     e.preventDefault();
 
     if (step === 1) {
