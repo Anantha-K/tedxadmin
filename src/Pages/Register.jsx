@@ -455,7 +455,7 @@ const TEDxRegistration = () => {
                     <option value="">Select semester</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                       <option key={sem} value={sem}>
-                        {sem}th Semester
+                         S{sem}
                       </option>
                     ))}
                   </select>
