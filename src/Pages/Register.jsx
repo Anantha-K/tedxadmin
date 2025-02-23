@@ -174,7 +174,8 @@ const TEDxRegistration = () => {
   };
 
   const handleSubmit = async (e) => {
-    // alert(formData.tshirtSize)
+    e.preventDefault();
+    
     const phoneError = validatePhone(formData.phone);
     const emailError = validateEmail(formData.email);
 
@@ -183,13 +184,10 @@ const TEDxRegistration = () => {
       email: emailError
     });
 
-
     if (phoneError || emailError) {
       toast.error("Please fix the validation errors before submitting");
       return;
     }
-
-    e.preventDefault();
 
     if (step === 1) {
       setIsLoading(true);
@@ -215,8 +213,7 @@ const TEDxRegistration = () => {
             gender: formData.gender,
             isFisatian: formData.isFisatian,
             branch: formData.isFisatian === "yes" ? formData.branch : undefined,
-            semester:
-              formData.isFisatian === "yes" ? formData.semester : undefined,
+            semester: formData.isFisatian === "yes" ? formData.semester : undefined,
             role: formData.isFisatian === "no" ? formData.role : undefined,
             tshirtSize: formData.tshirtSize,
           }),
@@ -241,16 +238,8 @@ const TEDxRegistration = () => {
         setIsLoading(false);
       }
     } else {
+      // Payment submission (step 2) - No need to check availability here
       setIsLoading(true);
-      const isAvailable = await checkRegistrationAvailability();
-
-      if (!isAvailable) {
-        toast.error("Sorry, registrations are now full");
-        setRegistrationsFull(true);
-        setIsLoading(false);
-        return;
-      }
-
       try {
         const formDataObj = new FormData();
         formDataObj.append("email", formData.email);
@@ -289,7 +278,6 @@ const TEDxRegistration = () => {
       }
     }
   };
-
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
