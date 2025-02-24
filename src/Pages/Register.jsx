@@ -18,7 +18,6 @@ const tshirtSizes = [
 ];
 
 const TEDxRegistration = () => {
-  // State management
   const [step, setStep] = useState(1);
   const [timeLeft, setTimeLeft] = useState(PAYMENT_TIMEOUT);
   const [isLoading, setIsLoading] = useState(true);
@@ -88,7 +87,7 @@ const TEDxRegistration = () => {
       if (!response.ok) throw new Error("Failed to fetch registration status");
 
       const data = await response.json();
-      setRegistrationStarted(data.started);
+      setRegistrationStarted(data.open);
       return data.started;
     } catch (error) {
       console.error("Error checking registration status:", error);
@@ -96,6 +95,19 @@ const TEDxRegistration = () => {
       return false;
     }
   };
+
+  useEffect(() => {
+    const checkSlots = async () => {
+      await checkRegistrationAvailability();
+    };
+
+    checkSlots();
+
+    const intervalId = setInterval(checkSlots, 30000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
 
   useEffect(() => {
     const initializeRegistration = async () => {
