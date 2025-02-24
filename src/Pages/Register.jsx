@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 const STORAGE_KEY = "tedx_registration";
 const PAYMENT_TIMEOUT = 600;
-const MAX_REGISTRATIONS = 40;
+const MAX_REGISTRATIONS = 30;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const tshirtSizes = [
