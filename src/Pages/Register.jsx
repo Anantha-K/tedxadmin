@@ -337,8 +337,8 @@ const TEDxRegistration = () => {
           <div className="subtitle">Registration Not Started</div>
         </div>
         <div className="registration-closed">
-          <h2>Registration Coming Soon</h2>
-          <p>Registration has not started yet. Please check back later.</p>
+          <h2>Registration Starting Soon</h2>
+          <p>Registration has not started yet. Please check back at 7:30pm.</p>
         </div>
       </div>
     );
@@ -351,7 +351,7 @@ const TEDxRegistration = () => {
         {registrationsFull ? (
           <div className="subtitle">Registrations Full</div>
         ) : (
-          <div className="subtitle">First Phase Tickets Live Now</div>
+          <div className="subtitle">Second Phase Tickets Live Now</div>
         )}
         {!registrationsFull && (
           <div className="slots-remaining">
