@@ -338,7 +338,7 @@ const TEDxRegistration = () => {
         </div>
         <div className="registration-closed">
           <h2>Registration Starting Soon</h2>
-          <p>Registration has not started yet. Please check back at 7:30pm.</p>
+          <p>Registration has not started yet. Please come back at 7:30pm.</p>
         </div>
       </div>
     );
