@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import  "../Styles/reg.css";
+import "../Styles/reg.css";
 import { Loader2 } from "lucide-react";
-
 
 const STORAGE_KEY = "tedx_registration";
 const PAYMENT_TIMEOUT = 600;
 const MAX_REGISTRATIONS = 40;
-const API_BASE_URL =  import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const tshirtSizes = [
   { size: "XS", measurements: "34-36" },
@@ -19,15 +18,18 @@ const tshirtSizes = [
 ];
 
 const TEDxRegistration = () => {
+  // State management
   const [step, setStep] = useState(1);
   const [timeLeft, setTimeLeft] = useState(PAYMENT_TIMEOUT);
   const [isLoading, setIsLoading] = useState(true);
   const [registrationsFull, setRegistrationsFull] = useState(false);
+  const [registrationStarted, setRegistrationStarted] = useState(false);
   const [remainingSlots, setRemainingSlots] = useState(MAX_REGISTRATIONS);
   const [validationErrors, setValidationErrors] = useState({
     phone: "",
-    email: ""
+    email: "",
   });
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,7 +43,6 @@ const TEDxRegistration = () => {
     paymentScreenshot: null,
     registrationTime: null,
   });
-
 
   const validatePhone = (phone) => {
     const phoneRegex = /^[6-9]\d{9}$/;
@@ -65,7 +66,6 @@ const TEDxRegistration = () => {
     return "";
   };
 
-
   const checkRegistrationAvailability = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/registration-count`);
@@ -82,9 +82,31 @@ const TEDxRegistration = () => {
     }
   };
 
+  const checkRegistrationStatus = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/registration-status`);
+      if (!response.ok) throw new Error("Failed to fetch registration status");
+
+      const data = await response.json();
+      setRegistrationStarted(data.started);
+      return data.started;
+    } catch (error) {
+      console.error("Error checking registration status:", error);
+      toast.error("Unable to verify registration status");
+      return false;
+    }
+  };
+
   useEffect(() => {
     const initializeRegistration = async () => {
       setIsLoading(true);
+
+      const hasStarted = await checkRegistrationStatus();
+      if (!hasStarted) {
+        setIsLoading(false);
+        return;
+      }
+
       await checkRegistrationAvailability();
 
       const savedData = localStorage.getItem(STORAGE_KEY);
@@ -145,15 +167,16 @@ const TEDxRegistration = () => {
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    if (id === 'phone') {
-      setValidationErrors(prev => ({
+
+    if (id === "phone") {
+      setValidationErrors((prev) => ({
         ...prev,
-        phone: validatePhone(value)
+        phone: validatePhone(value),
       }));
-    } else if (id === 'email') {
-      setValidationErrors(prev => ({
+    } else if (id === "email") {
+      setValidationErrors((prev) => ({
         ...prev,
-        email: validateEmail(value)
+        email: validateEmail(value),
       }));
     }
   };
@@ -175,13 +198,13 @@ const TEDxRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const phoneError = validatePhone(formData.phone);
     const emailError = validateEmail(formData.email);
 
     setValidationErrors({
       phone: phoneError,
-      email: emailError
+      email: emailError,
     });
 
     if (phoneError || emailError) {
@@ -213,7 +236,8 @@ const TEDxRegistration = () => {
             gender: formData.gender,
             isFisatian: formData.isFisatian,
             branch: formData.isFisatian === "yes" ? formData.branch : undefined,
-            semester: formData.isFisatian === "yes" ? formData.semester : undefined,
+            semester:
+              formData.isFisatian === "yes" ? formData.semester : undefined,
             role: formData.isFisatian === "no" ? formData.role : undefined,
             tshirtSize: formData.tshirtSize,
           }),
@@ -238,7 +262,6 @@ const TEDxRegistration = () => {
         setIsLoading(false);
       }
     } else {
-      // Payment submission (step 2) - No need to check availability here
       setIsLoading(true);
       try {
         const formDataObj = new FormData();
@@ -255,7 +278,7 @@ const TEDxRegistration = () => {
           throw new Error(error.error || "Payment submission failed");
         }
 
-        toast.success("Payment submitted successfully!");
+        toast.success("Submitted Successfully! You will receive a confirmation email shortly.");
         localStorage.removeItem(STORAGE_KEY);
         setFormData({
           name: "",
@@ -278,6 +301,7 @@ const TEDxRegistration = () => {
       }
     }
   };
+
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -289,6 +313,21 @@ const TEDxRegistration = () => {
       <div className="loading-container">
         <Loader2 className="loading-icon" />
         <h2>Loading...</h2>
+      </div>
+    );
+  }
+
+  if (!registrationStarted) {
+    return (
+      <div className="registration-container">
+        <div className="header">
+          <img src="/logo-white.png" alt="TEDx Logo" className="logo" />
+          <div className="subtitle">Registration Not Started</div>
+        </div>
+        <div className="registration-closed">
+          <h2>Registration Coming Soon</h2>
+          <p>Registration has not started yet. Please check back later.</p>
+        </div>
       </div>
     );
   }
@@ -443,7 +482,7 @@ const TEDxRegistration = () => {
                     <option value="">Select semester</option>
                     {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                       <option key={sem} value={sem}>
-                         S{sem}
+                        S{sem}
                       </option>
                     ))}
                   </select>
@@ -492,14 +531,16 @@ const TEDxRegistration = () => {
             <h2>Payment Instructions</h2>
             <ol>
               <li>Scan the QR code below using any UPI payment app</li>
-              <li>UPI ID: <span class="upi-id">www.nizamudheen-1@okaxis</span></li>
+              <li>
+                UPI ID: <span className="upi-id">www.nizamudheen-1@okaxis</span>
+              </li>
               <li>Take a screenshot of your payment confirmation</li>
               <li>Upload the screenshot below</li>
             </ol>
             {formData.isFisatian === "yes" ? (
-              <div className="price">₹799</div>
-            ) : (
               <div className="price">₹899</div>
+            ) : (
+              <div className="price">₹999</div>
             )}
           </div>
 
