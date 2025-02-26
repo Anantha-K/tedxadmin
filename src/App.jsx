@@ -5,6 +5,7 @@ import SignInPage from './Pages/Signin';
 import RegistrationsList from './Pages/Dashboard';
 import TEDxRegistration from './Pages/Register';
 import NotFound from './Pages/NotFound';
+import Tshirt from './Pages/Tshirt';
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/" element={<TEDxRegistration />} />
         <Route path="/admin/signin" element={<SignInPage />} />
         <Route path="/admin/dashboard" element={<RegistrationsList/>} /> 
+        <Route path="/tshirt" element={<Tshirt/>}/>
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
