@@ -8,15 +8,6 @@ const PAYMENT_TIMEOUT = 600;
 const MAX_REGISTRATIONS = 30;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const tshirtSizes = [
-  { size: "XS", measurements: "34-36" },
-  { size: "S", measurements: "36-38" },
-  { size: "M", measurements: "38-40" },
-  { size: "L", measurements: "40-42" },
-  { size: "XL", measurements: "42-44" },
-  { size: "XXL", measurements: "44-46" },
-];
-
 const TEDxRegistration = () => {
   const [step, setStep] = useState(1);
   const [timeLeft, setTimeLeft] = useState(PAYMENT_TIMEOUT);
@@ -38,7 +29,6 @@ const TEDxRegistration = () => {
     role: "",
     branch: "",
     semester: "",
-    tshirtSize: "",
     paymentScreenshot: null,
     registrationTime: null,
   });
@@ -193,10 +183,6 @@ const TEDxRegistration = () => {
     }
   };
 
-  const handleTshirtSelect = (size) => {
-    setFormData((prev) => ({ ...prev, tshirtSize: size }));
-  };
-
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -251,7 +237,6 @@ const TEDxRegistration = () => {
             semester:
               formData.isFisatian === "yes" ? formData.semester : undefined,
             role: formData.isFisatian === "no" ? formData.role : undefined,
-            tshirtSize: formData.tshirtSize,
           }),
         });
 
@@ -301,7 +286,6 @@ const TEDxRegistration = () => {
           role: "",
           branch: "",
           semester: "",
-          tshirtSize: "",
           paymentScreenshot: null,
           registrationTime: null,
         });
@@ -503,33 +487,10 @@ const TEDxRegistration = () => {
             </div>
           )}
 
-          <div className="section-title">T-Shirt Size</div>
-          <div className="tshirt-sizes">
-            {tshirtSizes.map(({ size, measurements }) => (
-              <div
-                key={size}
-                className={`tshirt-option ${
-                  formData.tshirtSize === size ? "selected" : ""
-                }`}
-                onClick={() => handleTshirtSelect(size)}
-              >
-                <div className="size-details">
-                  <span className="size">{size}</span>
-                  <span className="measurements">{measurements}</span>
-                </div>
-                <div className="radio-circle">
-                  {formData.tshirtSize === size && (
-                    <div className="radio-dot" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-
           <button
             type="submit"
             className="submit-button"
-            disabled={isLoading || !formData.tshirtSize}
+            disabled={isLoading}
           >
             {isLoading ? "Processing..." : "Register"}
           </button>
