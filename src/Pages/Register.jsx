@@ -335,7 +335,7 @@ const TEDxRegistration = () => {
         {registrationsFull ? (
           <div className="subtitle">Registrations Full</div>
         ) : (
-          <div className="subtitle">Third Phase Tickets Live Now</div>
+          <div className="subtitle">Final Phase Tickets Live Now</div>
         )}
         {!registrationsFull && (
           <div className="slots-remaining">
