@@ -511,9 +511,9 @@ const TEDxRegistration = () => {
               <li>Upload the screenshot below</li>
             </ol>
             {formData.isFisatian === "yes" ? (
-              <div className="price">₹399</div>
+              <div className="price">₹499</div>
             ) : (
-              <div className="price">₹399</div>
+              <div className="price">₹499</div>
             )}
           </div>
 
