@@ -95,6 +95,20 @@ body {
   font-size: clamp(12px, 2vw, 14px);
 }
 
+.watchParty {
+  background: rgba(186, 15, 15, 0.2);
+  color: #ad1d1d;
+  border: 2px solid #ff0000;
+  border-radius: 12px;
+  padding: 5px 10px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  font-size: clamp(12px, 2vw, 14px);
+}
+
+
 .actions {
   display: flex;
   gap: 10px;

@@ -97,6 +97,7 @@ const RegistrationsList = () => {
                 <h3>{registration.personalInfo.name}</h3>
                 </div>
                 {registration.personalInfo.isFisatian && <p className="fisatian">Fisatian</p>}
+                {registration.isWatchParty && <p className="watchParty">Watch Party</p>}
                 <p><MailIcon/>{registration.personalInfo.email}</p>
                 <p><Phone/>{registration.personalInfo.phone}</p>
                 <div style={{display:"flex",justifyContent:"start",gap:"10px",alignItems:"center"}}>
