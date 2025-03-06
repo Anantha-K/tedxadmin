@@ -335,7 +335,7 @@ const TEDxRegistration = () => {
         {registrationsFull ? (
           <div className="subtitle">Registrations Full</div>
         ) : (
-          <div className="subtitle">Final Phase Tickets Live Now</div>
+          <div className="subtitle">Watch Party Tickets Live Now</div>
         )}
         {!registrationsFull && (
           <div className="slots-remaining">
@@ -511,9 +511,9 @@ const TEDxRegistration = () => {
               <li>Upload the screenshot below</li>
             </ol>
             {formData.isFisatian === "yes" ? (
-              <div className="price">₹999</div>
+              <div className="price">₹399</div>
             ) : (
-              <div className="price">₹1099</div>
+              <div className="price">₹399</div>
             )}
           </div>
 

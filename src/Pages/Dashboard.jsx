@@ -12,6 +12,7 @@ const RegistrationsList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedScreenshot, setSelectedScreenshot] = useState(null);
   const [token, setToken] = useState(null);
+  const [watchParty,isWatchParty] = useState(false);
 
   useEffect(() => {
     fetchRegistrations();
