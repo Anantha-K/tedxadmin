@@ -41,7 +41,7 @@ const App = () => {
         <Route path="/admin/dashboard" element={<RegistrationsList/>} /> 
         <Route path="/tshirt" element={<Tshirt/>}/>
         <Route path="/*" element={<NotFound />} />
-        <Route path='/qr/scanner' element={<QRScanner/>}/>
+        <Route path='/scan' element={<QRScanner/>}/>
         
       </Routes>
     </BrowserRouter>
