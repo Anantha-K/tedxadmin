@@ -73,13 +73,19 @@ const Scan = () => {
     
     setLoading(true);
     try {
-      const qrData = new URLSearchParams(location.search).get("qr");
-      const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
-        qrData,
-      });
+      const payload = {
+        registrationId: participant.registrationId,
+        email: participant.email
+      };
+      
+      const response = await axios.post(`${API_BASE_URL}/mark-present`, payload);
       
       console.log("Mark as present response:", response.data);
-      setParticipant(response.data);
+      
+      setParticipant({
+        ...participant,
+        present: true
+      });
       
       alert(`${participant.name} has been marked as present!`);
     } catch (err) {
@@ -87,8 +93,10 @@ const Scan = () => {
       
       if (err.response) {
         setError(`Error ${err.response.status}: ${err.response.data.error || "Failed to mark as present"}`);
+      } else if (err.request) {
+        setError("No response from server. Please check your connection.");
       } else {
-        setError("Failed to mark as present. Please try again.");
+        setError(`Error: ${err.message}`);
       }
     } finally {
       setLoading(false);
