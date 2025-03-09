@@ -20,7 +20,7 @@ const Scan = () => {
       }
 
       try {
-        const response = await axios.post("http://localhost:3000/scan-qr", {
+        const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
           qrData,
         });
         setParticipant(response.data);
@@ -39,7 +39,7 @@ const Scan = () => {
     if (!participant || participant.present) return;
 
     try {
-      const response = await axios.post("http://localhost:3000/scan-qr", {
+      const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
         qrData: new URLSearchParams(location.search).get("qr"),
       });
       setParticipant(response.data);
