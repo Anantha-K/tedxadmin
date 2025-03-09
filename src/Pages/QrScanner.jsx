@@ -41,7 +41,7 @@ const Scan = () => {
             email: response.data.email,
             isFisatian: response.data.isFisatian ? "Yes" : "No",
             isWatchParty: response.data.isWatchParty ? "Yes" : "No",
-            present: false
+            present: response.data.present,
           });
         } else {
           const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
