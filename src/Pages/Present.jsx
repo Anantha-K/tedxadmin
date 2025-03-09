@@ -36,7 +36,6 @@ const PresentCandidates = () => {
   return (
     <div className="present-section">
       <div className="present-container" style={{
-        backgroundColor: "#f9fafb",
         borderRadius: "8px",
         padding: "20px",
         boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
@@ -88,8 +87,7 @@ const PresentCandidates = () => {
           <div className="present-list">
             <div className="table-header" style={{
               display: "grid",
-              gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr 1fr 2fr",
-              backgroundColor: "#e5e7eb",
+              gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr",
               padding: "10px 15px",
               borderRadius: "4px",
               fontWeight: "bold",
@@ -100,17 +98,16 @@ const PresentCandidates = () => {
               <span>Contact</span>
               <span>Fisatian</span>
               <span>Watch Party</span>
-              <span>Present</span>
-              <span>Marked At</span>
             </div>
             
             {presentCandidates.map((candidate, index) => (
               <div key={candidate.registrationId} className="candidate-row" style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr 1fr 2fr",
+                gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr",
                 padding: "12px 15px",
                 borderBottom: "1px solid #e5e7eb",
-                backgroundColor: index % 2 === 0 ? "#f9fafb" : "white"
+                backgroundColor: index % 2 === 0 ? "#f9fafb" : "white",
+                color: "#374151"
               }}>
                 <span>{candidate.registrationId}</span>
                 <span>{candidate.name}</span>
@@ -120,10 +117,6 @@ const PresentCandidates = () => {
                 </span>
                 <span>{candidate.isFisatian}</span>
                 <span>{candidate.isWatchParty}</span>
-                <span style={{ color: "#10b981" }}>
-                  <CheckCircle size={18} />
-                </span>
-                <span>{formatDate(candidate.markedPresentAt)}</span>
               </div>
             ))}
           </div>
