@@ -6,6 +6,9 @@ import RegistrationsList from './Pages/Dashboard';
 import TEDxRegistration from './Pages/Register';
 import NotFound from './Pages/NotFound';
 import Tshirt from './Pages/Tshirt';
+import QRScanner from './Pages/QrScanner';
+
+
 
 const App = () => {
   return (
@@ -38,6 +41,8 @@ const App = () => {
         <Route path="/admin/dashboard" element={<RegistrationsList/>} /> 
         <Route path="/tshirt" element={<Tshirt/>}/>
         <Route path="/*" element={<NotFound />} />
+        <Route path='/qr/scanner' element={<QRScanner/>}/>
+        
       </Routes>
     </BrowserRouter>
   );
