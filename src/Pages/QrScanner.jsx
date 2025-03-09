@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import { toast } from 'react-hot-toast';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -87,7 +88,7 @@ const Scan = () => {
         present: true
       });
       
-      alert(`${participant.name} has been marked as present!`);
+      toast.success(`${participant.name} has been marked as present!`);
     } catch (err) {
       console.error("Error marking participant as present:", err);
       
