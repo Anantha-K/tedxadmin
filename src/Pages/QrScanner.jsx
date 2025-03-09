@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 
+
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const Scan = () => {
   const [participant, setParticipant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
-
+  
   useEffect(() => {
     const fetchParticipantData = async () => {
       const queryParams = new URLSearchParams(location.search);
