@@ -56,7 +56,7 @@ const RegistrationsList = () => {
     setSelectedScreenshot(screenshotUrl);
     setModalOpen(true);
   };
-
+ 
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedScreenshot(null);

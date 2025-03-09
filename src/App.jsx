@@ -7,6 +7,8 @@ import TEDxRegistration from './Pages/Register';
 import NotFound from './Pages/NotFound';
 import Tshirt from './Pages/Tshirt';
 import QRScanner from './Pages/QrScanner';
+import PresentCandidates from './Pages/Present';
+
 
 
 
@@ -42,6 +44,8 @@ const App = () => {
         <Route path="/tshirt" element={<Tshirt/>}/>
         <Route path="/*" element={<NotFound />} />
         <Route path='/scan' element={<QRScanner/>}/>
+        <Route path='/present' element={<PresentCandidates/>}/>
+
         
       </Routes>
     </BrowserRouter>
