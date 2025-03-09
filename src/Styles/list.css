@@ -1,0 +1,134 @@
+
+.present-section {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .present-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .present-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .total-count {
+    background-color: #10b981;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+  }
+  
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .loading-icon.rotating {
+    animation: rotate 1s linear infinite;
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+  }
+  
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+  
+  .table-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr 1fr;
+    padding: 10px 15px;
+    font-weight: bold;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .candidate-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr 1fr;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+  }
+  
+  .candidate-row.even {
+    background-color: #f9fafb;
+  }
+  
+  .candidate-row.odd {
+    background-color: white;
+  }
+  
+  /* Mobile Responsive Styles */
+  @media screen and (max-width: 768px) {
+    .present-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .table-header {
+      display: none;
+    }
+    
+    .candidate-row {
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      margin-bottom: 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+    
+    .cell {
+      padding: 8px 0;
+      border-bottom: 1px solid #edf2f7;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .cell:last-child {
+      border-bottom: none;
+    }
+    
+    .cell::before {
+      content: attr(data-label);
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #718096;
+      font-size: 0.85em;
+    }
+  }

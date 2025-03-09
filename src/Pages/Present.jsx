@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Users, Loader2, CheckCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
+import '../Styles/list.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -35,90 +36,52 @@ const PresentCandidates = () => {
 
   return (
     <div className="present-section">
-      <div className="present-container" style={{
-        borderRadius: "8px",
-        padding: "20px",
-        boxShadow: "0 2px 10px rgba(0,0,0,0.1)"
-      }}>
-        <div className="present-header" style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px"
-        }}>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px"
-          }}>
+      <div className="present-container">
+        <div className="present-header">
+          <div className="header-title">
             <CheckCircle className="icon" color="#10b981" />
             <h2>Present Candidates</h2>
           </div>
-          <div className="total-count" style={{
-            backgroundColor: "#10b981",
-            color: "white",
-            padding: "5px 15px",
-            borderRadius: "20px",
-            fontWeight: "bold"
-          }}>
+          <div className="total-count">
             Total: {count}
           </div>
         </div>
 
         {loading ? (
-          <div className="loading-container" style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "40px"
-          }}>
-            <Loader2 className="loading-icon" />
-            <h3 style={{ marginLeft: "10px" }}>Loading present candidates...</h3>
+          <div className="loading-container">
+            <Loader2 className="loading-icon rotating" />
+            <h3>Loading present candidates...</h3>
           </div>
         ) : presentCandidates.length === 0 ? (
-          <div className="no-data" style={{
-            textAlign: "center",
-            padding: "40px",
-            color: "#6b7280"
-          }}>
+          <div className="no-data">
             <h3>No candidates are marked as present yet</h3>
           </div>
         ) : (
           <div className="present-list">
-            <div className="table-header" style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr",
-              padding: "10px 15px",
-              borderRadius: "4px",
-              fontWeight: "bold",
-              marginBottom: "10px"
-            }}>
-              <span>ID</span>
-              <span>Name</span>
-              <span>Contact</span>
-              <span>Fisatian</span>
-              <span>Watch Party</span>
-            </div>
-            
-            {presentCandidates.map((candidate, index) => (
-              <div key={candidate.registrationId} className="candidate-row" style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 2fr 2fr 1fr 1fr",
-                padding: "12px 15px",
-                borderBottom: "1px solid #e5e7eb",
-                backgroundColor: index % 2 === 0 ? "#f9fafb" : "white",
-                color: "#374151"
-              }}>
-                <span>{candidate.registrationId}</span>
-                <span>{candidate.name}</span>
-                <span>
-                  <div>{candidate.email}</div>
-                  <div>{candidate.phone}</div>
-                </span>
-                <span>{candidate.isFisatian}</span>
-                <span>{candidate.isWatchParty}</span>
+            <div className="table-container">
+              <div className="table-header">
+                <span>ID</span>
+                <span>Name</span>
+                <span>Contact</span>
+                <span>Fisatian</span>
+                <span>Watch Party</span>
               </div>
-            ))}
+              
+              <div className="table-body">
+                {presentCandidates.map((candidate, index) => (
+                  <div key={candidate.registrationId} className={`candidate-row ${index % 2 === 0 ? 'even' : 'odd'}`}>
+                    <span className="cell" data-label="ID">{candidate.registrationId}</span>
+                    <span className="cell" data-label="Name">{candidate.name}</span>
+                    <span className="cell" data-label="Contact">
+                      <div>{candidate.email}</div>
+                      <div>{candidate.phone}</div>
+                    </span>
+                    <span className="cell" data-label="Fisatian">{candidate.isFisatian}</span>
+                    <span className="cell" data-label="Watch Party">{candidate.isWatchParty}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
