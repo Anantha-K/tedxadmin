@@ -13,7 +13,6 @@ const Scan = () => {
   useEffect(() => {
     const fetchParticipantData = async () => {
       try {
-        // Get QR data from URL
         const queryParams = new URLSearchParams(location.search);
         const qrData = queryParams.get("qr");
         
@@ -24,21 +23,15 @@ const Scan = () => {
           setLoading(false);
           return;
         }
-        
-        // Try to parse the QR data to make sure it's valid JSON
         let parsedQrData;
         try {
           parsedQrData = JSON.parse(qrData);
           console.log("Parsed QR data:", parsedQrData);
         } catch (parseError) {
           console.error("Failed to parse QR data:", parseError);
-          // If it's not valid JSON, send it as is - maybe backend expects a different format
         }
-        
-        // Get participant details using email from QR data
-        // This is a more reliable approach than the scan-qr endpoint
+
         if (parsedQrData && parsedQrData.email) {
-          // Use the get-qr endpoint with email parameter
           const response = await axios.get(`${API_BASE_URL}/get-qr/${parsedQrData.email}`);
           console.log("Response from get-qr:", response.data);
           
@@ -48,11 +41,9 @@ const Scan = () => {
             email: response.data.email,
             isFisatian: response.data.isFisatian ? "Yes" : "No",
             isWatchParty: response.data.isWatchParty ? "Yes" : "No",
-            // Set present to false initially as we haven't marked them present yet
             present: false
           });
         } else {
-          // Fallback to scan-qr endpoint if we can't use the get-qr approach
           const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
             qrData,
           });
@@ -62,7 +53,6 @@ const Scan = () => {
       } catch (err) {
         console.error("Error fetching participant data:", err);
         
-        // More detailed error message based on the error status
         if (err.response) {
           setError(`Error ${err.response.status}: ${err.response.data.error || "Failed to fetch participant data"}`);
         } else if (err.request) {
@@ -83,10 +73,7 @@ const Scan = () => {
     
     setLoading(true);
     try {
-      // Get the QR data again
       const qrData = new URLSearchParams(location.search).get("qr");
-      
-      // Mark participant as present
       const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
         qrData,
       });
@@ -94,7 +81,6 @@ const Scan = () => {
       console.log("Mark as present response:", response.data);
       setParticipant(response.data);
       
-      // Show success message
       alert(`${participant.name} has been marked as present!`);
     } catch (err) {
       console.error("Error marking participant as present:", err);
@@ -187,22 +173,22 @@ const Scan = () => {
             marginBottom: "30px"
           }}>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Registration ID:</div>
-            <div>{participant.registrationId}</div>
+            <div  style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.registrationId}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Name:</div>
-            <div>{participant.name}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.name}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Email:</div>
-            <div>{participant.email}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.email}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Phone:</div>
-            <div>{participant.phone}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.phone}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Fisatian:</div>
-            <div>{participant.isFisatian}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.isFisatian}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Watch Party:</div>
-            <div>{participant.isWatchParty}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.isWatchParty}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Present:</div>
             <div style={{ 
