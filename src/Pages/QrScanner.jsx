@@ -192,26 +192,25 @@ const Scan = () => {
             marginBottom: "30px"
           }}>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Registration ID:</div>
-            <div>{participant.registrationId}</div>
+            <div style={{color: "#6c757d" }}>{participant.registrationId}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Name:</div>
-            <div>{participant.name}</div>
+            <div  style={{color: "#6c757d" }}>{participant.name}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Email:</div>
-            <div>{participant.email}</div>
+            <div  style={{color: "#6c757d" }}>{participant.email}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Phone:</div>
-            <div>{participant.phone}</div>
+            <div  style={{color: "#6c757d" }}>{participant.phone}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Fisatian:</div>
-            <div>{participant.isFisatian}</div>
+            <div  style={{color: "#6c757d" }}>{participant.isFisatian}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Watch Party:</div>
-            <div>{participant.isWatchParty}</div>
+            <div  style={{color: "#6c757d" }}>{participant.isWatchParty}</div>
             
-            {/* Always show T-shirt size field, displaying N/A if not available */}
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
-            <div>{participant.tshirtSize}</div>
+            <div  style={{color: "#6c757d" }}>{participant.tshirtSize}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Present:</div>
             <div style={{ 
