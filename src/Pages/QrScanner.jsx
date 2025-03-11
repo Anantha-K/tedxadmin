@@ -25,7 +25,6 @@ const Scan = () => {
           return;
         }
 
-        // Try to parse the QR data if it's JSON
         let parsedQrData;
         try {
           parsedQrData = JSON.parse(qrData);
@@ -36,20 +35,17 @@ const Scan = () => {
 
         let responseData;
 
-        // Handle both cases - either we have parsed email or direct QR data
         if (parsedQrData && parsedQrData.email) {
-          // Case 1: We have parsed JSON with email
           const response = await axios.get(`${API_BASE_URL}/get-qr/${parsedQrData.email}`);
           console.log("Response from get-qr:", response.data);
           responseData = response.data;
         } else {
-          // Case 2: We use raw QR data
           const response = await axios.post(`${API_BASE_URL}/scan-qr`, { qrData });
           console.log("Response from scan-qr:", response.data);
           responseData = response.data;
         }
+        console.log(responseData)
 
-        // Consistently format the participant data
         setParticipant({
           registrationId: responseData.registrationId,
           name: responseData.name,
