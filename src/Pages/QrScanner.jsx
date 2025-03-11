@@ -40,8 +40,10 @@ const Scan = () => {
             registrationId: response.data.registrationId,
             name: response.data.name,
             email: response.data.email,
+            phone: response.data.phone || "N/A",
             isFisatian: response.data.isFisatian ? "Yes" : "No",
             isWatchParty: response.data.isWatchParty ? "Yes" : "No",
+            tshirtSize: response.data.tshirtSize || "N/A", 
             present: response.data.present,
           });
         } else {
@@ -49,7 +51,10 @@ const Scan = () => {
             qrData,
           });
           console.log("Response from scan-qr:", response.data);
-          setParticipant(response.data);
+          setParticipant({
+            ...response.data,
+            tshirtSize: response.data.tshirtSize || "N/A" 
+          });
         }
       } catch (err) {
         console.error("Error fetching participant data:", err);
@@ -182,7 +187,7 @@ const Scan = () => {
             marginBottom: "30px"
           }}>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Registration ID:</div>
-            <div  style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.registrationId}</div>
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.registrationId}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Name:</div>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.name}</div>
@@ -198,6 +203,13 @@ const Scan = () => {
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Watch Party:</div>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.isWatchParty}</div>
+            
+            {participant.tshirtSize && participant.tshirtSize !== "N/A" && (
+              <>
+                <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
+                <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.tshirtSize}</div>
+              </>
+            )}
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Present:</div>
             <div style={{ 
