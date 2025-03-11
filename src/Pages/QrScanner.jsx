@@ -44,7 +44,7 @@ const Scan = () => {
           console.log("Response from scan-qr:", response.data);
           responseData = response.data;
         }
-        console.log(responseData)
+        alert(responseData)
 
         setParticipant({
           registrationId: responseData.registrationId,
