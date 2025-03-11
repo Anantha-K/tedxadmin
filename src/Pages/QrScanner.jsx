@@ -24,6 +24,8 @@ const Scan = () => {
           setLoading(false);
           return;
         }
+
+        // Try to parse the QR data if it's JSON
         let parsedQrData;
         try {
           parsedQrData = JSON.parse(qrData);
@@ -32,30 +34,33 @@ const Scan = () => {
           console.error("Failed to parse QR data:", parseError);
         }
 
+        let responseData;
+
+        // Handle both cases - either we have parsed email or direct QR data
         if (parsedQrData && parsedQrData.email) {
+          // Case 1: We have parsed JSON with email
           const response = await axios.get(`${API_BASE_URL}/get-qr/${parsedQrData.email}`);
           console.log("Response from get-qr:", response.data);
-          
-          setParticipant({
-            registrationId: response.data.registrationId,
-            name: response.data.name,
-            email: response.data.email,
-            phone: response.data.phone || "N/A",
-            isFisatian: response.data.isFisatian ? "Yes" : "No",
-            isWatchParty: response.data.isWatchParty ? "Yes" : "No",
-            present: response.data.present,
-            tshirtSize: response.data.tshirtSize || "N/A", 
-          });
+          responseData = response.data;
         } else {
-          const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
-            qrData,
-          });
+          // Case 2: We use raw QR data
+          const response = await axios.post(`${API_BASE_URL}/scan-qr`, { qrData });
           console.log("Response from scan-qr:", response.data);
-          setParticipant({
-            ...response.data,
-            tshirtSize: response.data.tshirtSize || "N/A" 
-          });
+          responseData = response.data;
         }
+
+        // Consistently format the participant data
+        setParticipant({
+          registrationId: responseData.registrationId,
+          name: responseData.name,
+          email: responseData.email,
+          phone: responseData.phone || "N/A",
+          isFisatian: responseData.isFisatian ? "Yes" : "No",
+          isWatchParty: responseData.isWatchParty ? "Yes" : "No",
+          present: responseData.present,
+          tshirtSize: responseData.tshirtSize || "N/A",
+        });
+        
       } catch (err) {
         console.error("Error fetching participant data:", err);
         
@@ -187,29 +192,26 @@ const Scan = () => {
             marginBottom: "30px"
           }}>
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Registration ID:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.registrationId}</div>
+            <div>{participant.registrationId}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Name:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.name}</div>
+            <div>{participant.name}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Email:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.email}</div>
+            <div>{participant.email}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Phone:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.phone}</div>
+            <div>{participant.phone}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Fisatian:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.isFisatian}</div>
+            <div>{participant.isFisatian}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Watch Party:</div>
-            <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.isWatchParty}</div>
+            <div>{participant.isWatchParty}</div>
             
-            {participant.tshirtSize && participant.tshirtSize !== "N/A" && (
-              <>
-                <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
-                <div style={{ fontWeight: "bold", color: "#6c757d" }}>{participant.tshirtSize}</div>
-              </>
-            )}
+            {/* Always show T-shirt size field, displaying N/A if not available */}
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
+            <div>{participant.tshirtSize}</div>
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Present:</div>
             <div style={{ 
