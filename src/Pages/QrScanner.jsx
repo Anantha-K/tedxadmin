@@ -204,8 +204,8 @@ const Scan = () => {
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Watch Party:</div>
             <div  style={{color: "#6c757d" }}>{participant.isWatchParty}</div>
             
-            {/* <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
-            <div  style={{color: "#6c757d" }}>{participant.tshirtSize}</div> */}
+            <div style={{ fontWeight: "bold", color: "#6c757d" }}>T-shirt Size:</div>
+            <div  style={{color: "#6c757d" }}>{participant.tshirtSize}</div> 
             
             <div style={{ fontWeight: "bold", color: "#6c757d" }}>Present:</div>
             <div style={{ 
