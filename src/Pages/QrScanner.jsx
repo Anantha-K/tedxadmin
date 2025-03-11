@@ -43,8 +43,8 @@ const Scan = () => {
             phone: response.data.phone || "N/A",
             isFisatian: response.data.isFisatian ? "Yes" : "No",
             isWatchParty: response.data.isWatchParty ? "Yes" : "No",
-            tshirtSize: response.data.tshirtSize || "N/A", 
             present: response.data.present,
+            tshirtSize: response.data.tshirtSize || "N/A", 
           });
         } else {
           const response = await axios.post(`${API_BASE_URL}/scan-qr`, {
